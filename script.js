@@ -7,6 +7,7 @@ var searchBtn = document.querySelector("#searchBtn");
 var cityInput = document.querySelector("#input-text");
 var newCity;
 var SideDiv;
+var SideUl;
 var SideLi;
 var SideH5;
 var mainDiv;
@@ -97,15 +98,18 @@ searchBtn.addEventListener('click', function(event){
     fiveDayRow.style.visibility = "visible";
 
     SideDiv = document.createElement('div');
+    SideUl = document.createElement('ul');
+    SideUl.setAttribute("class", "list-group");
     SideLi = document.createElement('li');
-    SideH5 = document.createElement('h5')
+    SideH5 = document.createElement('h5');
     
     newCity = cityInput.value;
     SideH5.innerText = newCity
     cityList.push(newCity);
     SideLi.appendChild(SideH5);
-    SideLi.setAttribute("class","no-bullets table-bordered");
-    SideDiv.appendChild(SideLi);
+    SideLi.setAttribute("class","no-bullets list-group-item");
+    SideUl.appendChild(SideLi)
+    SideDiv.appendChild(SideUl);
     citySavedList.appendChild(SideDiv);
     console.log(newCity);
     getInfo();
