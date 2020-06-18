@@ -122,12 +122,12 @@ searchBtn.addEventListener('click', function(event){
         
 });
 
-// a.addEventListener('click', function(event){
+//  b.addEventListener('click', function(event){
 //     event.preventDefault()
-//     console.log("did I click");
+//    console.log("did I click");
 
 
-// })
+//  })
     
 
 
@@ -144,8 +144,8 @@ function setUpSearch(){
         SideH5.innerText = newCity
         cityList.push(newCity);
         SideLi.appendChild(SideH5);
-        a= SideLi.setAttribute("class","no-bullets list-group-item");
-        b=  SideLi.setAttribute("data-index",newCity);
+        SideLi.setAttribute("class","no-bullets list-group-item");
+        SideLi.setAttribute("data-index",newCity);
         SideUl.prepend(SideLi);
         SideDiv.appendChild(SideUl);
         citySavedList.appendChild(SideDiv);
