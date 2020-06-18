@@ -93,36 +93,50 @@ init();
 
 function init(){
 
+   localStorage.getItem("city", newCity);
+   cityInput.value = localStorage.getItem("city", newCity);
+   setUpSearch();   
+    
 searchBtn.addEventListener('click', function(event){
     event.preventDefault();
-    fiveDayRow.style.visibility = "visible";
-
-    SideDiv = document.createElement('div');
-    SideUl = document.createElement('ul');
-    SideUl.setAttribute("class", "list-group");
-    SideLi = document.createElement('li');
-    SideH5 = document.createElement('h5');
-    
-    newCity = cityInput.value;
-    SideH5.innerText = newCity
-    cityList.push(newCity);
-    SideLi.appendChild(SideH5);
-    SideLi.setAttribute("class","no-bullets list-group-item");
-    SideUl.appendChild(SideLi)
-    SideDiv.appendChild(SideUl);
-    citySavedList.appendChild(SideDiv);
-    console.log(newCity);
-    getInfo();
-    
+    setUpSearch()
+        
 });
     
 }
 
+function setUpSearch(){
+
+    fiveDayRow.style.visibility = "visible";
+    SideDiv = document.createElement('div');
+    SideUl = document.createElement('ul');
+    SideUl.setAttribute("class", "list-group");
+
+    if (cityInput.value !== '' ){
+
+        SideLi = document.createElement('li');
+        SideH5 = document.createElement('h5');    
+        newCity = cityInput.value;
+        SideH5.innerText = newCity
+        cityList.push(newCity);
+        SideLi.appendChild(SideH5);
+        SideLi.setAttribute("class","no-bullets list-group-item");
+        SideUl.prepend(SideLi)
+        SideDiv.appendChild(SideUl);
+        citySavedList.appendChild(SideDiv);
+        localStorage.setItem("city", newCity);
+        cityInput.value = "";
+        getInfo();
+    }
+
+
+}
+
+
 function getInfo(){
     var queryURL1 = "http://api.openweathermap.org/data/2.5/weather?q=" + newCity + "&appid=" + token;
     
-    console.log(newCity);
-    
+  // first ajax call to retrieve the Lat and Long coordinates of city entered.  
     $.ajax({
         url: queryURL1,
         method: "GET",
@@ -132,14 +146,12 @@ function getInfo(){
      
       function firstResponse(response1){
 
-        currentTempK = response1.main.temp;
-        currentHumidity = response1.main.humidity;
-        currentWindSpeed = response1.wind.speed;
         longitude = response1.coord.lon;
         latitude = response1.coord.lat;
         var queryURL2 = "https://api.openweathermap.org/data/2.5/onecall?lat=" + latitude + '&lon=' + longitude + "&%20exclude=hourly,daily&appid=" + token;
-        
-        console.log(currentTempK, currentHumidity, currentWindSpeed);
+   
+  // second ajax call to retrieve the conditions based on Lat and Long coordinates from the first AJAX call.
+
         $.ajax({
             url: queryURL2,
             method: "GET",
@@ -149,9 +161,12 @@ function getInfo(){
 
         function secondResponse(response2){
 
+            currentTempK = response2.current.temp;
+            currentHumidity = response2.current.humidity;
+            currentWindSpeed = response2.current.wind_speed;
+
             currentUV = response2.current.uvi;
             RcurWeathIcon = response2.current.weather[0].icon;
-            console.log(RcurWeathIcon);
 
             Rday1Date = response2.daily[1].dt;
             RtempDay1 = response2.daily[1].temp.max;
@@ -163,30 +178,21 @@ function getInfo(){
             RtempDay2 = response2.daily[2].temp.max;
             RhumidDay2 = response2.daily[2].humidity
             RiconDay2 = response2.daily[2].weather[0].icon;
-           
 
             Rday3Date = response2.daily[3].dt;
             RtempDay3 = response2.daily[3].temp.max;
             RhumidDay3 = response2.daily[3].humidity
             RiconDay3 = response2.daily[3].weather[0].icon;
-           
-
+        
             Rday4Date = response2.daily[4].dt;
             RtempDay4 = response2.daily[4].temp.max;
             RhumidDay4 = response2.daily[4].humidity
             RiconDay4 = response2.daily[4].weather[0].icon;
-            // console.log(RtempDay4,RhumidDay4,RiconDay4);
-           
 
             Rday5Date = response2.daily[5].dt;
             RtempDay5 = response2.daily[5].temp.max;
             RhumidDay5 = response2.daily[5].humidity
             RiconDay5 = response2.daily[5].weather[0].icon;
-         
-         
-            // need html styling for cards and search table and width of search table // 
-
-        console.log("Rest of the program");
        
 
     currentTempF = Math.round((currentTempK -273.15) * 9/5 + 32);
@@ -199,7 +205,6 @@ function getInfo(){
     IconDay4 = IconUrl + RiconDay4 + ".png";
     IconDay5 = IconUrl + RiconDay5 + ".png";
    
-    console.log(cityList.length);
                    
     if(cityList.length === 1){
         MainH1 = document.createElement('h1');
@@ -212,60 +217,90 @@ function getInfo(){
             MainH3 = document.createElement('h3');
             if (j===0) { responseValue = currentTempF;
             } else if (j === 1){
-
                 responseValue = currentHumidity;
-
             } else if (j === 2){
-
                 responseValue = currentWindSpeedR;
-
             } else if (j === 3){
-
                 responseValue = currentUV;
-
             };
 
             MainH3.innerText = weatherStats[j] + "  " + responseValue;
             MainLi.setAttribute("class","no-bullets");
+            if (j===3){
+                if (currentUV < 3){
+                    MainH3.style.color = "green";
+                };
+
+                if (currentUV >=3 && currentUV <5){
+                    MainH3.style.color = "yellow";
+                };
+
+                if(currentUV >=5 && currentUV < 8){
+                    MainH3.style.color = "orange";
+                }
+
+                if(currentUV >=8 && currentUV < 11){
+                    MainH3.style.color = "red";
+                }
+
+                if (currentUV >=11){
+                    MainH3.style.color = "purple";
+                };
+            }
             MainLi.appendChild(MainH3);
             MainUl.appendChild(MainLi);
-
         }
-    
-             mainPage.appendChild(MainUl);
+            mainPage.appendChild(MainUl);
     }  
     else {
       
        MainH1.innerHTML = newCity + " (" + currentDate + ")" + "<img src=" + curWeathIcon + ">"; 
-       console.log(weatherStats.length);
+
        for(var k = 0; k<weatherStats.length; k++){
-        console.log(k);
         if (k===0) { responseValue = currentTempF;
-            console.log("k loop" + currentTempF);
-            console.log("k loop" + responseValue);
         } else if (k === 1){
-
             responseValue = currentHumidity;
-            console.log("k loop" + currentHumidity);
-            console.log("k loop" + responseValue);
         } else if (k === 2){
-
             responseValue = currentWindSpeedR;
-            console.log("k loop" + currentWindSpeed);
-            console.log("k loop" + responseValue);
         } else if (k === 3){
-
             responseValue = currentUV;
-
         };
 
         
         MainH3.innerText = weatherStats[k] + "  " + responseValue;
+        MainLi.setAttribute("class","no-bullets");
+        if (k===3){
+            if (currentUV < 3){
+                MainH3.style.color = "green";
+            };
+
+            if (currentUV >=3 && currentUV <5){
+                MainH3.style.color = "yellow";
+            };
+
+            if(currentUV >=5 && currentUV < 8){
+                MainH3.style.color = "orange";
+            }
+
+            if(currentUV >=8 && currentUV < 11){
+                MainH3.style.color = "red";
+            }
+
+            if (currentUV >=11){
+                MainH3.style.color = "purple";
+            };
+        }
+
+        MainLi.appendChild(MainH3);
+        MainUl.appendChild(MainLi);
         console.log(MainH3.innerText);
 
     };
 
+       mainPage.appendChild(MainUl);
 };
+
+// Setting the 5 day forecast informaton 
    
 TempDay1 = Math.round((RtempDay1 -273.15) * 9/5 + 32);
 TempDay2 = Math.round((RtempDay2 -273.15) * 9/5 + 32);
@@ -296,10 +331,6 @@ TempDay5 = Math.round((RtempDay5 -273.15) * 9/5 + 32);
  Img5.src = IconDay5;
  fiveDayT5.innerText = "Temp:  "+TempDay5
  fiveDayH5.innerText = "Humidity:  "+RhumidDay5;
-
-//     searchList();
-  
-
 
 
 };
