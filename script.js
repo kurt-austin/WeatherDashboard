@@ -83,9 +83,12 @@ var RhumidDay5;
 var RiconDay5;
 var IconDay5;
 var IconUrl;
+var storedCity;
+var a;
+var b;
 
 
-fiveDayRow.style.visibility = "hidden";
+
 
 var token = '901580ef13143976913351a805ff6a5d';
 
@@ -93,24 +96,45 @@ init();
 
 function init(){
 
-   localStorage.getItem("city", newCity);
-   cityInput.value = localStorage.getItem("city", newCity);
-   setUpSearch();   
+    fiveDayRow.style.visibility = "hidden";
+   
+   storedCity= localStorage.getItem("city", newCity);
+   
+   if (storedCity !== null){
+       
+        cityInput.value = localStorage.getItem("city", newCity);
+        SideDiv = document.createElement('div');
+        SideUl = document.createElement('ul');
+        SideUl.setAttribute("class", "list-group");
+        
+   setUpSearch(); 
+    } else{
+        SideDiv = document.createElement('div');
+        SideUl = document.createElement('ul');
+        SideUl.setAttribute("class", "list-group");
+
+    };  
+};
     
 searchBtn.addEventListener('click', function(event){
     event.preventDefault();
     setUpSearch()
         
 });
+
+// a.addEventListener('click', function(event){
+//     event.preventDefault()
+//     console.log("did I click");
+
+
+// })
     
-}
+
 
 function setUpSearch(){
 
     fiveDayRow.style.visibility = "visible";
-    SideDiv = document.createElement('div');
-    SideUl = document.createElement('ul');
-    SideUl.setAttribute("class", "list-group");
+
 
     if (cityInput.value !== '' ){
 
@@ -120,8 +144,9 @@ function setUpSearch(){
         SideH5.innerText = newCity
         cityList.push(newCity);
         SideLi.appendChild(SideH5);
-        SideLi.setAttribute("class","no-bullets list-group-item");
-        SideUl.prepend(SideLi)
+        a= SideLi.setAttribute("class","no-bullets list-group-item");
+        b=  SideLi.setAttribute("data-index",newCity);
+        SideUl.prepend(SideLi);
         SideDiv.appendChild(SideUl);
         citySavedList.appendChild(SideDiv);
         localStorage.setItem("city", newCity);
@@ -194,6 +219,8 @@ function getInfo(){
             RhumidDay5 = response2.daily[5].humidity
             RiconDay5 = response2.daily[5].weather[0].icon;
        
+
+// Math forumulas and getting the weather condition icons.
 
     currentTempF = Math.round((currentTempK -273.15) * 9/5 + 32);
     currentWindSpeedR = Math.round(currentWindSpeed);
@@ -280,25 +307,24 @@ function getInfo(){
 
             if(currentUV >=5 && currentUV < 8){
                 MainH3.style.color = "orange";
-            }
+            };
 
             if(currentUV >=8 && currentUV < 11){
                 MainH3.style.color = "red";
-            }
+            };
 
             if (currentUV >=11){
                 MainH3.style.color = "purple";
             };
         }
 
-        MainLi.appendChild(MainH3);
-        MainUl.appendChild(MainLi);
-        console.log(MainH3.innerText);
-
+        
     };
 
-       mainPage.appendChild(MainUl);
+    
 };
+
+
 
 // Setting the 5 day forecast informaton 
    
