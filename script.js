@@ -122,14 +122,6 @@ searchBtn.addEventListener('click', function(event){
         
 });
 
-//  b.addEventListener('click', function(event){
-//     event.preventDefault()
-//    console.log("did I click");
-
-
-//  })
-    
-
 
 function setUpSearch(){
 
@@ -282,19 +274,34 @@ function getInfo(){
     else {
       
        MainH1.innerHTML = newCity + " (" + currentDate + ")" + "<img src=" + curWeathIcon + ">"; 
+       MainUl.remove();
 
+       for(var l = 0; l< 3, l++;){
+            MainH3.remove();
+            MainLi.remove();
+
+       }
+       MainUl = document.createElement('ul')
+   
        for(var k = 0; k<weatherStats.length; k++){
+            MainLi = document.createElement('li');   
+            MainH3 = document.createElement('h3');
         if (k===0) { responseValue = currentTempF;
+         
         } else if (k === 1){
             responseValue = currentHumidity;
+         
         } else if (k === 2){
-            responseValue = currentWindSpeedR;
+             responseValue = currentWindSpeedR;
+         
         } else if (k === 3){
-            responseValue = currentUV;
+          responseValue = currentUV;
         };
 
         
         MainH3.innerText = weatherStats[k] + "  " + responseValue;
+
+
         MainLi.setAttribute("class","no-bullets");
         if (k===3){
             if (currentUV < 3){
@@ -317,11 +324,11 @@ function getInfo(){
                 MainH3.style.color = "purple";
             };
         }
-
-        
+            MainLi.appendChild(MainH3);
+            MainUl.appendChild(MainLi);
     };
 
-    
+    mainPage.appendChild(MainUl);
 };
 
 
