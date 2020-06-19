@@ -151,7 +151,7 @@ function setUpSearch(){
 
 
 function getInfo(){
-    var queryURL1 = "http://api.openweathermap.org/data/2.5/weather?q=" + newCity + "&appid=" + token;
+    var queryURL1 = "https://api.openweathermap.org/data/2.5/weather?q=" + newCity + "&appid=" + token;
     
   // first ajax call to retrieve the Lat and Long coordinates of city entered.  
     $.ajax({
@@ -223,7 +223,7 @@ function getInfo(){
     IconDay3 = IconUrl + RiconDay3 + ".png";
     IconDay4 = IconUrl + RiconDay4 + ".png";
     IconDay5 = IconUrl + RiconDay5 + ".png";
-    
+
                    
     if(cityList.length === 1){
         MainH1 = document.createElement('h1');
