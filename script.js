@@ -223,7 +223,7 @@ function getInfo(){
     IconDay3 = IconUrl + RiconDay3 + ".png";
     IconDay4 = IconUrl + RiconDay4 + ".png";
     IconDay5 = IconUrl + RiconDay5 + ".png";
-   
+    
                    
     if(cityList.length === 1){
         MainH1 = document.createElement('h1');
